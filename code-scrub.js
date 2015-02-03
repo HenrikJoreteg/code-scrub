@@ -53,7 +53,7 @@ module.exports = function (code, config) {
     });
 
     lines = code.split('\n');
-    var done = false;
+    var firstDone = false;
     var prev;
     var output = [];
     lines.forEach(function (line, index) {
@@ -63,24 +63,51 @@ module.exports = function (code, config) {
             line = line.replace(/\/\//, '');
         }
 
-        if (done) {
-            output.push(line);
-            return output;
+        var firstChars = line.trim().slice(0, 3);
+        var curr = {
+            isVar: (firstChars === 'var' || firstChars === 'let'),
+            indent: getIndent(line),
+            isComment: (firstChars === '// ' || firstChars === '*/')
+        };
+        
+        // fix odd bug where we sometimes
+        // get an indent of 1 for unknown reason
+        if (curr.indent === 1) {
+            curr.indent = 0;
+            line = line.trim();
         }
 
-        var firstChars = line.trim().slice(0, 3);
+        var sameIndent = (prev && prev.indent === curr.indent);
+        var sameType = (curr.isComment && prev.isComment) || (curr.isVar && prev && prev.isVar)
+        var shouldAddNewLine = false;
 
-        var curr = (firstChars === 'var' || firstChars === 'let');
-        
-        if (!curr && prev) {
-            output.push('', '');
-            done = true;
+        // add new line if new var statements or comment section
+        if (firstDone && sameIndent && !sameType && (curr.isComment || curr.isVar)) {        
+            output.push('');
+        }
+
+        if (!curr.isVar && prev && prev.isVar) {
+            // add extra line for initial declarations
+            if (!firstDone) {
+                output.push('', '');
+                firstDone = true;
+                console.log('trimming', line);
+            }
         }
         prev = curr;
 
-        output.push(line.trim());
+        output.push(line);
         return output;
     });
 
     return output.join('\n') + '\n';
 };
+
+
+function getIndent(str) {
+    var res = /^\s*/.exec(str);
+    if (res && res[0]) {
+        return res[0].length;
+    }
+    return 0;
+}
