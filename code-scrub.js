@@ -68,16 +68,17 @@ module.exports = function (code, config) {
             return output;
         }
 
-        var firstChars = line.slice(0, 3);
+        var firstChars = line.trim().slice(0, 3);
 
-        var curr = firstChars === 'var' || firstChars === 'let';
+        var curr = (firstChars === 'var' || firstChars === 'let');
+        
         if (!curr && prev) {
             output.push('', '');
             done = true;
         }
         prev = curr;
 
-        output.push(line);
+        output.push(line.trim());
         return output;
     });
 
