@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+var scrub = require('../code-scrub');
+var config = require('rc')('code-scrub', {});
+var file = config._[0];
+var content;
+
+
+if (file) {
+    file = path.resolve(file);
+    content = fs.readFileSync(file, 'utf8');
+    fs.writeFileSync(file, scrub(content, config), 'utf8');
+    process.exit(0);
+}
+
+
+var buf = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('readable', function() {
+    var chunk = process.stdin.read();
+    if (chunk !== null) {
+        buf += chunk.toString();
+    }
+});
+process.stdin.on('end', function() {
+    process.stdout.write(scrub(buf, config));
+});
+

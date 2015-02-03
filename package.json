@@ -1,0 +1,19 @@
+{
+  "name": "code-scrub",
+  "description": "JS module code formatter per @HenrikJoreteg's preferences",
+  "version": "0.0.0",
+  "author": "Henrik Joreteg <henrik@andyet.net>",
+  "dependencies": {
+    "acorn": "^0.11.0",
+    "amp-defaults": "^1.0.1",
+    "amp-includes": "^1.0.2",
+    "escodegen": "^1.6.1",
+    "rc": "^0.6.0",
+    "repeat-string": "^1.5.0"
+  },
+  "license": "MIT",
+  "main": "code-scrub.js",
+  "bin": {
+    "code-scrub": "./bin/code-scrub"
+  }
+}
