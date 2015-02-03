@@ -1,7 +1,7 @@
 {
   "name": "code-scrub",
   "description": "JS module code formatter per @HenrikJoreteg's preferences",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Henrik Joreteg <henrik@andyet.net>",
   "dependencies": {
     "acorn": "^0.11.0",
