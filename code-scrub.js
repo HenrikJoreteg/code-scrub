@@ -91,7 +91,6 @@ module.exports = function (code, config) {
             if (!firstDone) {
                 output.push('', '');
                 firstDone = true;
-                console.log('trimming', line);
             }
         }
         prev = curr;
